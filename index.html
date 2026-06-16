@@ -52,6 +52,11 @@
   .ptrack{height:8px;background:#EFEDF4;border-radius:6px;margin-bottom:12px}
   .pfill{height:8px;border-radius:6px}
   .pmeta{font-size:11px;color:var(--tx2);margin:-8px 0 12px}
+  .grow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-top:0.5px solid var(--line)}
+  .grow:first-of-type{border-top:0;padding-top:0}
+  .gp{font-size:14px;font-weight:500}
+  .gd{font-size:11px;color:var(--tx2);margin-top:1px}
+  .gm{font-size:14px;font-weight:600;color:var(--peach-d);white-space:nowrap;padding-left:10px}
   .foot{text-align:center;font-size:11px;color:var(--tx3);margin-top:4px}
   .foot a{color:var(--lav-d);text-decoration:none}
   .state{text-align:center;padding:48px 20px;color:var(--tx2);font-size:14px}
@@ -131,7 +136,8 @@ function processMov(rows){
     const monto=num(row[ci.monto]);
     if(!tipo&&!monto)continue;
     out.push({fecha:pdate(row[ci.fecha]),quien:(row[ci.quien]||"").trim(),
-      tipo:tipo,monto:monto,prop:(row[ci.prop]||"").trim()||"Sin propósito"});
+      tipo:tipo,monto:monto,prop:(row[ci.prop]||"").trim()||"Sin propósito",
+      nota:(row[ci.nota]||"").trim()});
   }
   return out;
 }
@@ -152,21 +158,25 @@ function parseConfig(rows){
 
 function compute(mov){
   const isAp=x=>x.tipo.startsWith("aporte"),isGa=x=>x.tipo.startsWith("gasto");
-  const aportado=mov.filter(isAp).reduce((s,x)=>s+x.monto,0);
-  const gastado=mov.filter(isGa).reduce((s,x)=>s+x.monto,0);
+  const A=x=>Math.abs(x.monto);
+  const aportado=mov.filter(isAp).reduce((s,x)=>s+A(x),0);
+  const gastado=mov.filter(isGa).reduce((s,x)=>s+A(x),0);
   const saldo=aportado-gastado;
-  const per={};
-  for(const x of mov)if(isAp(x)){const k=x.quien||"—";per[k]=(per[k]||0)+x.monto}
-  const props={};
+  const per={},perComun={};
+  for(const x of mov)if(isAp(x)){const k=x.quien||"—";
+    per[k]=(per[k]||0)+A(x);
+    if(norm(x.prop)==="ahorro comun")perComun[k]=(perComun[k]||0)+A(x);}
+  const props={},gastos=[];
   for(const x of mov){const k=x.prop;props[k]=props[k]||{ap:0,ga:0};
-    if(isAp(x))props[k].ap+=x.monto;else if(isGa(x))props[k].ga+=x.monto}
-  const series=[];const sorted=mov.filter(x=>x.fecha).sort((a,b)=>a.fecha-b.fecha);
+    if(isAp(x))props[k].ap+=A(x);else if(isGa(x)){props[k].ga+=A(x);gastos.push(x);}}
+  gastos.sort((a,b)=>(b.fecha||0)-(a.fecha||0));
+  const sorted=mov.filter(x=>x.fecha).sort((a,b)=>a.fecha-b.fecha);
   let run=0;const byMonth={};
-  for(const x of sorted){run+=isGa(x)?-x.monto:x.monto;
+  for(const x of sorted){run+=(isGa(x)?-1:1)*A(x);
     byMonth[x.fecha.getFullYear()+"-"+x.fecha.getMonth()]={v:run,d:x.fecha}}
-  for(const k in byMonth)series.push(byMonth[k]);
+  const series=[];for(const k in byMonth)series.push(byMonth[k]);
   series.sort((a,b)=>a.d-b.d);
-  return {aportado,gastado,saldo,per,props,series};
+  return {aportado,gastado,saldo,per,perComun,props,gastos,series};
 }
 
 function ring(pct){
@@ -196,14 +206,17 @@ function area(series){
 function render(mov,cfg){
   const d=compute(mov);
   const meta=cfg.meta||0,pct=meta>0?d.saldo/meta:0,falta=Math.max(meta-d.saldo,0);
-  const people=Object.keys(d.per);
-  const total=people.reduce((s,k)=>s+d.per[k],0)||1;
-  const pa=people.map((k,i)=>({k,v:d.per[k],pct:d.per[k]/total,c:PASTELS[i%PASTELS.length]}));
+  const balSrc=Object.keys(d.perComun).length?d.perComun:d.per;
+  const people=Object.keys(balSrc);
+  const total=people.reduce((s,k)=>s+balSrc[k],0)||1;
+  const pa=people.map((k,i)=>({k,v:balSrc[k],pct:balSrc[k]/total,c:PASTELS[i%PASTELS.length]}))
+    .sort((a,b)=>b.v-a.v);
   let balNote="",balCls="ok";
   if(pa.length===2){const diff=Math.abs(pa[0].v-pa[1].v),lead=pa[0].v>=pa[1].v?pa[0].k:pa[1].k;
-    balCls=diff<=40?"ok":"warn";
-    balNote=diff===0?"Parejos — van igualitos":`${diff<=40?"Parejos":"Atención"} — ${lead} va ${money0(diff)} adelante`;}
-  const propKeys=Object.keys(d.props).map(k=>({k,...d.props[k],saldo:d.props[k].ap-d.props[k].ga}))
+    balCls=diff<=50?"ok":"warn";
+    balNote=diff===0?"Parejos — van igualitos":`${diff<=50?"Parejos":"Atención"} — ${lead} va ${money0(diff)} adelante`;}
+  const propKeys=Object.keys(d.props).filter(k=>d.props[k].ap>0)
+    .map(k=>({k,...d.props[k],saldo:d.props[k].ap-d.props[k].ga}))
     .sort((a,b)=>b.saldo-a.saldo);
   const maxP=Math.max(...propKeys.map(p=>p.saldo),1);
   const pc={};propKeys.forEach((p,i)=>pc[p.k]=PASTELS[i%PASTELS.length]);
@@ -215,6 +228,15 @@ function render(mov,cfg){
       <div class="ptrack"><div class="pfill" style="width:${Math.max(4,(p.saldo/maxP)*100).toFixed(0)}%;background:${col}"></div></div>`;
     if(mk)propHTML+=`<div class="pmeta">meta ${money0(mk)} · ${Math.round(Math.min(p.saldo/mk,1)*100)}%${p.ga>0?" · gastado "+money0(p.ga):""}</div>`;
   }
+
+  let gastosHTML="";
+  if(d.gastos.length){
+    for(const g of d.gastos){
+      const f=g.fecha?`${String(g.fecha.getDate()).padStart(2,"0")}/${String(g.fecha.getMonth()+1).padStart(2,"0")}/${g.fecha.getFullYear()}`:"";
+      const sub=[f,g.nota].filter(Boolean).join(" · ");
+      gastosHTML+=`<div class="grow"><div><div class="gp">${g.prop}</div>${sub?`<div class="gd">${sub}</div>`:""}</div><div class="gm">−${money0(Math.abs(g.monto))}</div></div>`;
+    }
+  }else gastosHTML='<div style="font-size:13px;color:var(--tx2)">Sin gastos registrados todavía.</div>';
 
   const html=`
   <div class="card">
@@ -236,7 +258,7 @@ function render(mov,cfg){
   </div>
 
   <div class="card">
-    <div class="lbl">Quién va aportando</div>
+    <div class="lbl">Quién va aportando <span style="color:var(--tx3)">· ahorro común</span></div>
     <div class="bar">${pa.map(p=>`<div style="width:${(p.pct*100).toFixed(1)}%;background:${p.c}"></div>`).join("")}</div>
     <div class="legend">${pa.map(p=>`<span><span class="dot" style="background:${p.c}"></span>${p.k} <span style="color:var(--tx2)">· ${money0(p.v)}</span></span>`).join("")}</div>
     ${balNote?`<div class="note ${balCls}">${balCls==="ok"?"✓":"!"} ${balNote}</div>`:""}
@@ -245,6 +267,11 @@ function render(mov,cfg){
   <div class="card">
     <div class="lbl" style="margin-bottom:12px">Por propósito</div>
     ${propHTML}
+  </div>
+
+  <div class="card">
+    <div class="prow" style="margin-bottom:10px"><span class="lbl">Gastos</span><span class="pval" style="color:var(--peach-d)">−${money0(d.gastado)}</span></div>
+    ${gastosHTML}
   </div>
 
   <div class="card">
