@@ -215,7 +215,7 @@ function render(mov,cfg){
   if(pa.length===2){const diff=Math.abs(pa[0].v-pa[1].v),lead=pa[0].v>=pa[1].v?pa[0].k:pa[1].k;
     balCls=diff<=50?"ok":"warn";
     balNote=diff===0?"Parejos — van igualitos":`${diff<=50?"Parejos":"Atención"} — ${lead} va ${money0(diff)} adelante`;}
-  const propKeys=Object.keys(d.props).filter(k=>d.props[k].ap>0)
+  const propKeys=Object.keys(d.props).filter(k=>d.props[k].ap>0||d.props[k].ga>0)
     .map(k=>({k,...d.props[k],saldo:d.props[k].ap-d.props[k].ga}))
     .sort((a,b)=>b.saldo-a.saldo);
   const maxP=Math.max(...propKeys.map(p=>p.saldo),1);
@@ -226,15 +226,17 @@ function render(mov,cfg){
     const mk=cfg.metas[norm(p.k)],col=pc[p.k];
     propHTML+=`<div class="prow"><span>${p.k}</span><span class="pval">${money(p.saldo)}</span></div>
       <div class="ptrack"><div class="pfill" style="width:${Math.max(4,(p.saldo/maxP)*100).toFixed(0)}%;background:${col}"></div></div>`;
-    if(mk)propHTML+=`<div class="pmeta">meta ${money0(mk)} · ${Math.round(Math.min(p.saldo/mk,1)*100)}%${p.ga>0?" · gastado "+money0(p.ga):""}</div>`;
+    if(mk)propHTML+=`<div class="pmeta">meta ${money0(mk)} · ${Math.round(Math.min(p.saldo/mk,1)*100)}%</div>`;
+    if(p.ga>0)propHTML+=`<div class="pmeta">aportado ${money0(p.ap)} · gastado ${money0(p.ga)}</div>`;
   }
 
   let gastosHTML="";
   if(d.gastos.length){
     for(const g of d.gastos){
       const f=g.fecha?`${String(g.fecha.getDate()).padStart(2,"0")}/${String(g.fecha.getMonth()+1).padStart(2,"0")}/${g.fecha.getFullYear()}`:"";
-      const sub=[f,g.nota].filter(Boolean).join(" · ");
-      gastosHTML+=`<div class="grow"><div><div class="gp">${g.prop}</div>${sub?`<div class="gd">${sub}</div>`:""}</div><div class="gm">−${money0(Math.abs(g.monto))}</div></div>`;
+      const title=g.nota||g.prop;
+      const sub=[f,g.nota?g.prop:""].filter(Boolean).join(" · ");
+      gastosHTML+=`<div class="grow"><div><div class="gp">${title}</div>${sub?`<div class="gd">${sub}</div>`:""}</div><div class="gm">−${money0(Math.abs(g.monto))}</div></div>`;
     }
   }else gastosHTML='<div style="font-size:13px;color:var(--tx2)">Sin gastos registrados todavía.</div>';
 
