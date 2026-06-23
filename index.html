@@ -9,7 +9,7 @@
 <style>
   :root{
     --bg:#F7F6FB; --card:#FFFFFF; --line:#ECEAF4;
-    --tx:#2B2D36; --tx2:#8E93A0; --tx3:#B6BAC4;
+    --tx:#2B2D36; --tx2:#697080; --tx3:#898E9A;
     --mint:#9AD9BC; --mint-d:#2E7D58; --mint-bg:#E4F4EC; --ring:#7ECBA1;
     --lav:#B9B4F0; --lav-d:#5A50B0; --lav-bg:#DCD9F6;
     --peach:#F3B79A; --peach-d:#B96A41; --peach-bg:#FBE7DD;
@@ -49,13 +49,13 @@
   .pval{font-weight:600}
   .ptrack{height:8px;background:#EFEDF4;border-radius:6px;margin-bottom:12px}
   .pfill{height:8px;border-radius:6px}
-  .pmeta{font-size:11px;color:var(--tx2);margin:-8px 0 12px}
+  .pmeta{font-size:12px;color:var(--tx2);margin:-8px 0 12px}
   .grow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-top:0.5px solid var(--line)}
   .grow:first-of-type{border-top:0;padding-top:0}
   .gp{font-size:14px;font-weight:500}
-  .gd{font-size:11px;color:var(--tx2);margin-top:1px}
+  .gd{font-size:12px;color:var(--tx2);margin-top:1px}
   .gm{font-size:14px;font-weight:600;color:var(--peach-d);white-space:nowrap;padding-left:10px}
-  .foot{text-align:center;font-size:11px;color:var(--tx3);margin-top:4px}
+  .foot{text-align:center;font-size:12px;color:var(--tx3);margin-top:4px}
   .foot a,.verlink{color:var(--lav-d);text-decoration:none}
   .state{text-align:center;padding:48px 20px;color:var(--tx2);font-size:14px}
   .spin{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--ring);border-radius:50%;margin:0 auto 14px;animation:s .8s linear infinite}
@@ -63,11 +63,11 @@
   .btn{appearance:none;border:.5px solid var(--line);background:var(--card);color:var(--tx);font:inherit;font-size:13px;padding:8px 16px;border-radius:12px;cursor:pointer}
   /* nuevas */
   .seg{display:flex;gap:5px;background:#F0EEF6;border-radius:12px;padding:4px}
-  .seg button{flex:1;appearance:none;border:0;background:transparent;font:inherit;font-size:12px;font-weight:500;color:var(--tx2);padding:7px 4px;border-radius:9px;cursor:pointer}
+  .seg button{flex:1;appearance:none;border:0;background:transparent;font:inherit;font-size:13px;font-weight:500;color:var(--tx2);padding:10px 4px;border-radius:9px;cursor:pointer}
   .seg button.active{background:#fff;color:var(--tx);box-shadow:0 1px 2px rgba(0,0,0,.06)}
   .pgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
   .pgrid .pv{font-size:19px;font-weight:600}
-  .pgrid .pk{font-size:11px;color:var(--tx2);margin-top:2px}
+  .pgrid .pk{font-size:12px;color:var(--tx2);margin-top:2px}
   .verlink{display:block;text-align:center;font-size:13px;font-weight:500;padding:13px;background:#fff;border:.5px solid var(--line);border-radius:14px;margin-bottom:12px}
   details.card summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}
   details.card summary::-webkit-details-marker{display:none}
@@ -83,12 +83,27 @@
   .hrow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-top:.5px solid var(--line)}
   .hrow:first-of-type{border-top:0}
   .hmain{font-size:14px;font-weight:500;display:flex;align-items:center;gap:7px}
-  .hsub{font-size:11px;color:var(--tx2);margin-top:2px}
-  .hbadge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
+  .hsub{font-size:12px;color:var(--tx2);margin-top:2px}
+  .hbadge{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px}
   .hamt{font-size:14px;font-weight:600;white-space:nowrap;padding-left:10px}
   .mintbg{background:var(--mint-bg);color:var(--mint-d)}
   .peachbg{background:var(--peach-bg);color:var(--peach-d)}
   .sumrow{display:flex;align-items:center;justify-content:space-between}
+  .hflex{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  /* leyenda de la tendencia */
+  .tlegend{display:flex;gap:16px;font-size:12px;color:var(--tx2);margin-top:8px}
+  .tlegend span{display:flex;align-items:center;gap:6px}
+  .ls{width:16px;border-top:2.5px solid var(--blue);display:inline-block}
+  .ls.dash{border-top-style:dashed;border-color:var(--mint-d)}
+  /* fila "último aporte" */
+  .inflow{display:flex;align-items:center;gap:7px;margin-top:12px;padding-top:12px;
+    border-top:.5px solid var(--line);font-size:13px;color:var(--tx2)}
+  .inflow b{color:var(--tx);font-weight:600}
+  .inflow .iarw{color:var(--mint-d);font-weight:700}
+  /* valor resumido en las tarjetas plegables */
+  .sumval{font-size:12px;color:var(--tx2);font-weight:500;margin-right:8px}
+  /* enlaces con área tocable cómoda en móvil */
+  .tap{display:inline-block;padding:10px 6px;min-height:40px}
   @media (prefers-reduced-motion:reduce){.spin{animation:none}}
 </style>
 </head>
@@ -105,6 +120,16 @@ const money0=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",m
 const norm=s=>(s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
 const isAp=x=>x.tipo.startsWith("aporte"),isGa=x=>x.tipo.startsWith("gasto"),ABS=x=>Math.abs(x.monto);
 const fmtDate=d=>d?`${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`:"";
+const agoStr=d=>{
+  if(!d)return"";
+  const day=Math.floor((Date.now()-d.getTime())/86400000);
+  if(day<=0)return"hoy";
+  if(day===1)return"ayer";
+  if(day<7)return`hace ${day} días`;
+  if(day<14)return"hace 1 sem";
+  if(day<31)return`hace ${Math.floor(day/7)} sem`;
+  return fmtDate(d);
+};
 
 function parseCSV(t){
   const rows=[];let row=[],f="",q=false;
@@ -187,7 +212,8 @@ function compute(mov){
     byMonth[x.fecha.getFullYear()+"-"+x.fecha.getMonth()]={v:run,d:x.fecha}}
   const series=[];for(const k in byMonth)series.push(byMonth[k]);
   series.sort((a,b)=>a.d-b.d);
-  return {aportado,gastado,saldo,per,perComun,props,gastos,series};
+  const lastAp=mov.filter(isAp).filter(x=>x.fecha).sort((a,b)=>b.fecha-a.fecha)[0]||null;
+  return {aportado,gastado,saldo,per,perComun,props,gastos,series,lastAp};
 }
 
 function toD(x){return x?(x instanceof Date?x:new Date(x+"T00:00:00")):null}
@@ -211,7 +237,7 @@ function ring(pct){
     <circle cx="42" cy="42" r="34" fill="none" stroke="var(--ring)" stroke-width="10" stroke-linecap="round"
       stroke-dasharray="${dash.toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 42 42)"/>
     <text x="42" y="40" text-anchor="middle" font-size="18" font-weight="600" fill="var(--tx)">${Math.round(pct*100)}%</text>
-    <text x="42" y="54" text-anchor="middle" font-size="9" fill="var(--tx2)">meta</text></svg>`;
+    <text x="42" y="54" text-anchor="middle" font-size="11" fill="var(--tx2)">meta</text></svg>`;
 }
 function area(series){
   if(series.length<2){const v=series.length?money0(series[0].v):"$0";
@@ -220,8 +246,8 @@ function area(series){
   const xs=i=>10+i*((W-20)/(n-1)),ys=v=>H-(v/max)*(H-pad);
   let line="M"+series.map((s,i)=>`${xs(i).toFixed(1)},${ys(s.v).toFixed(1)}`).join(" L");
   const fill=line+` L${xs(n-1).toFixed(1)},${H} L${xs(0).toFixed(1)},${H} Z`;
-  const labels=series.map((s,i)=>`<text x="${xs(i).toFixed(0)}" y="${H+11}" font-size="9" fill="var(--tx3)" text-anchor="middle">${MES[s.d.getMonth()]}</text>`).join("");
-  return `<svg width="100%" viewBox="0 0 ${W} ${H+15}" role="img" aria-label="Crecimiento del ahorro">
+  const labels=series.map((s,i)=>`<text x="${xs(i).toFixed(0)}" y="${H+12}" font-size="10.5" fill="var(--tx2)" text-anchor="middle">${MES[s.d.getMonth()]}</text>`).join("");
+  return `<svg width="100%" viewBox="0 0 ${W} ${H+17}" role="img" aria-label="Crecimiento del ahorro">
     <path d="${fill}" fill="var(--blue-bg)"/>
     <path d="${line}" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="${xs(n-1).toFixed(1)}" cy="${ys(series[n-1].v).toFixed(1)}" r="4" fill="var(--blue)"/>
@@ -236,49 +262,79 @@ function rowHTML(x){
 }
 
 /* ---------- DASHBOARD ---------- */
+function buildTrend(series,meta,saldo){
+  const n=series.length;
+  if(n<2)return `<div style="font-size:13px;color:var(--tx2);padding:8px 0">Aún no hay suficiente historial para la tendencia. Saldo: ${money0(saldo)}</div>`;
+  const W=320,H=150,padL=10,padR=12,padT=16,padB=22;
+  const rate=saldo/n;
+  const reached=meta>0&&saldo>=meta;
+  let monthsLeft=0,projDate=null;
+  if(meta>0&&!reached&&rate>0){monthsLeft=Math.ceil((meta-saldo)/rate);
+    projDate=new Date();projDate.setDate(1);projDate.setMonth(projDate.getMonth()+monthsLeft);}
+  const steps=Math.max((n-1)+(projDate?monthsLeft:0),1);
+  const ymax=Math.max(meta||0,saldo,...series.map(s=>s.v))*1.08;
+  const xs=i=>padL+(i/steps)*(W-padL-padR);
+  const ys=v=>H-padB-(v/ymax)*(H-padT-padB);
+  let aLine="M"+series.map((s,i)=>xs(i).toFixed(1)+","+ys(s.v).toFixed(1)).join(" L");
+  const aFill=aLine+` L${xs(n-1).toFixed(1)},${ys(0).toFixed(1)} L${xs(0).toFixed(1)},${ys(0).toFixed(1)} Z`;
+  const projLine=projDate?`M${xs(n-1).toFixed(1)},${ys(saldo).toFixed(1)} L${xs(steps).toFixed(1)},${ys(meta).toFixed(1)}`:"";
+  const metaY=meta>0?ys(meta):null;
+  const lbl=(i,t,a)=>`<text x="${xs(i).toFixed(0)}" y="${H-6}" font-size="10.5" fill="var(--tx2)" text-anchor="${a}">${t}</text>`;
+  let labels=lbl(0,MES[series[0].d.getMonth()],"start");
+  if(projDate)labels+=lbl(steps,MES[projDate.getMonth()]+" '"+String(projDate.getFullYear()).slice(2),"end");
+  else labels+=lbl(n-1,MES[series[n-1].d.getMonth()],"end");
+  const svg=`<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tendencia y proyección del ahorro">
+    ${metaY!=null?`<line x1="${padL}" y1="${metaY.toFixed(1)}" x2="${W-padR}" y2="${metaY.toFixed(1)}" stroke="#CFCBDC" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="${padL}" y="${(metaY-5).toFixed(1)}" font-size="10.5" fill="var(--tx2)">Meta ${money0(meta)}</text>`:""}
+    <path d="${aFill}" fill="var(--blue-bg)"/>
+    <path d="${aLine}" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${projLine?`<path d="${projLine}" fill="none" stroke="var(--mint)" stroke-width="2.5" stroke-dasharray="5 4" stroke-linecap="round"/>`:""}
+    <circle cx="${xs(n-1).toFixed(1)}" cy="${ys(saldo).toFixed(1)}" r="4.5" fill="var(--blue)" stroke="#fff" stroke-width="2"/>
+    ${projDate?`<circle cx="${xs(steps).toFixed(1)}" cy="${ys(meta).toFixed(1)}" r="4.5" fill="#fff" stroke="var(--mint-d)" stroke-width="2"/>`:""}
+    ${labels}</svg>`;
+  let cap;
+  if(meta<=0)cap="Definan una meta en Config para proyectar.";
+  else if(reached)cap="🎉 ¡Meta alcanzada!";
+  else if(rate<=0)cap="A este ritmo no avanzan. Suban el aporte.";
+  else cap=`A su ritmo (~${money0(rate)}/mes) llegan ≈ <b style="color:var(--tx);font-weight:600">${MES[projDate.getMonth()]} ${projDate.getFullYear()}</b>`;
+  const legend=`<div class="tlegend"><span><i class="ls"></i>Ahorro real</span>${projDate?'<span><i class="ls dash"></i>Proyección</span>':""}</div>`;
+  return svg+legend+`<div class="lbl" style="margin-top:8px">${cap}</div>`;
+}
+
 function dashboardView(mov,cfg){
   const d=compute(mov);
   const meta=cfg.meta||0,pct=meta>0?d.saldo/meta:0,falta=Math.max(meta-d.saldo,0);
-  // proyección
-  let proj;
-  if(meta<=0)proj=`<div class="lbl">Define una meta en Config para ver la proyección.</div>`;
-  else if(d.saldo>=meta)proj=`<div style="font-size:18px;font-weight:600;color:var(--mint-d)">🎉 ¡Meta alcanzada!</div>`;
-  else if(d.series.length<1)proj=`<div class="lbl">Aún no hay suficiente historial para proyectar.</div>`;
-  else{const rate=d.saldo/d.series.length;
-    if(rate<=0)proj=`<div class="lbl">A este ritmo no avanzan. Suban el aporte para llegar a la meta.</div>`;
-    else{const left=Math.ceil(falta/rate);const dt=new Date();dt.setDate(1);dt.setMonth(dt.getMonth()+left);
-      proj=`<div style="font-size:19px;font-weight:600">≈ ${MES[dt.getMonth()]} ${dt.getFullYear()}</div>
-        <div class="lbl" style="margin-top:2px">A su ritmo (~${money0(rate)}/mes) · faltan ~${left} ${left===1?'mes':'meses'}</div>`;}}
-  // resumen período
   const r=periodRange(state.period),fp=mov.filter(x=>inRange(x.fecha,r.from,r.to));
   const apP=fp.filter(isAp).reduce((s,x)=>s+ABS(x),0),gaP=fp.filter(isGa).reduce((s,x)=>s+ABS(x),0);
   const perP={};fp.forEach(x=>{if(isAp(x)){const k=x.quien||"—";perP[k]=(perP[k]||0)+ABS(x)}});
-  const perStr=Object.keys(perP).length?Object.keys(perP).map(k=>k+" "+money0(perP[k])).join(" · "):"Sin aportes en el período";
+  const perStr=Object.keys(perP).length?Object.keys(perP).map(k=>k+" "+money0(perP[k])).join(" · "):"Sin aportes";
   const segs=[["mes","Mes"],["trim","Trim."],["ano","Año"],["todo","Todo"]];
-  // balance común
   const balSrc=Object.keys(d.perComun).length?d.perComun:d.per;
   const ppl=Object.keys(balSrc),tot=ppl.reduce((s,k)=>s+balSrc[k],0)||1;
   const pa=ppl.map((k,i)=>({k,v:balSrc[k],pct:balSrc[k]/tot,c:PASTELS[i%PASTELS.length]})).sort((a,b)=>b.v-a.v);
-  let balNote="",balCls="ok";
-  if(pa.length===2){const diff=Math.abs(pa[0].v-pa[1].v),lead=pa[0].v>=pa[1].v?pa[0].k:pa[1].k;
-    balCls=diff<=50?"ok":"warn";
-    balNote=diff===0?"Parejos — van igualitos":`${diff<=50?"Parejos":"Atención"} — ${lead} va ${money0(diff)} adelante`;}
-  // por propósito
+  const totComun=pa.reduce((s,p)=>s+p.v,0);
+  let balNote="";
+  if(pa.length>=2){const diff=Math.abs(pa[0].v-pa[1].v);
+    balNote=diff<=50?"Van parejos 🙌":`Juntos llevan ${money0(totComun)}`;}
+  else if(pa.length===1)balNote=`Juntos llevan ${money0(totComun)}`;
   const propKeys=Object.keys(d.props).filter(k=>d.props[k].ap>0||d.props[k].ga>0)
     .map(k=>({k,...d.props[k],saldo:d.props[k].ap-d.props[k].ga})).sort((a,b)=>b.saldo-a.saldo);
   const maxP=Math.max(...propKeys.map(p=>p.saldo),1);const pc={};propKeys.forEach((p,i)=>pc[p.k]=PASTELS[i%PASTELS.length]);
   let propHTML="";
   for(const p of propKeys){const mk=cfg.metas[norm(p.k)],col=pc[p.k];
+    let w,metaLine;
+    if(mk){const prog=Math.min(Math.max(p.saldo,0)/mk,1);
+      w=Math.max(4,prog*100);
+      metaLine=`<div class="pmeta">meta ${money0(mk)} · ${Math.round(prog*100)}% alcanzado</div>`;}
+    else{w=Math.max(4,(p.saldo/maxP)*100);
+      metaLine=`<div class="pmeta">sin meta · barra comparativa</div>`;}
     propHTML+=`<div class="prow"><span>${p.k}</span><span class="pval">${money(p.saldo)}</span></div>
-      <div class="ptrack"><div class="pfill" style="width:${Math.max(4,(p.saldo/maxP)*100).toFixed(0)}%;background:${col}"></div></div>`;
-    if(mk)propHTML+=`<div class="pmeta">meta ${money0(mk)} · ${Math.round(Math.min(p.saldo/mk,1)*100)}%</div>`;
+      <div class="ptrack"><div class="pfill" style="width:${w.toFixed(0)}%;background:${col}"></div></div>${metaLine}`;
     if(p.ga>0)propHTML+=`<div class="pmeta">aportado ${money0(p.ap)} · gastado ${money0(p.ga)}</div>`;}
-  // gastos
   let gastosHTML=d.gastos.length?d.gastos.map(g=>{
     const f=fmtDate(g.fecha),title=g.nota||g.prop,sub=[f,g.nota?g.prop:""].filter(Boolean).join(" · ");
     return `<div class="grow"><div><div class="gp">${title}</div>${sub?`<div class="gd">${sub}</div>`:""}</div><div class="gm">−${money0(ABS(g))}</div></div>`;
-  }).join(""):'<div style="font-size:13px;color:var(--tx2)">Sin gastos registrados todavía.</div>';
-  // historial reciente
+  }).join(""):'<div style="font-size:13px;color:var(--tx2)">Sin gastos todavía.</div>';
   const recent=mov.slice().sort((a,b)=>(b.fecha||0)-(a.fecha||0)).slice(0,6).map(rowHTML).join("");
 
   return `
@@ -288,52 +344,52 @@ function dashboardView(mov,cfg){
   </div>
 
   <div class="card">
-    <div class="lbl">Saldo disponible</div>
-    <div class="big">${money(d.saldo)}</div>
-    <div class="chips"><span class="chip up">↑ Aportado ${money0(d.aportado)}</span><span class="chip dn">↓ Gastado ${money0(d.gastado)}</span></div>
-  </div>
-
-  <div class="card meta-row">${ring(pct)}
-    <div class="meta-txt"><div class="lbl">Meta común</div>
-      <div class="m1">${money0(d.saldo)} <span>de</span> ${money0(meta)}</div>
-      <div class="lbl">${meta>0?"Faltan "+money0(falta):"Define la meta en Config"}</div></div>
-  </div>
-
-  <div class="card"><div class="lbl" style="margin-bottom:6px">Proyección de la meta</div>${proj}</div>
-
-  <div class="card">
-    <div class="lbl" style="margin-bottom:12px">Resumen del período</div>
-    <div class="seg" style="margin-bottom:14px">${segs.map(s=>`<button class="${state.period===s[0]?'active':''}" onclick="setP('${s[0]}')">${s[1]}</button>`).join("")}</div>
-    <div class="pgrid">
-      <div><div class="pv" style="color:var(--mint-d)">${money0(apP)}</div><div class="pk">Aportado</div></div>
-      <div><div class="pv" style="color:var(--peach-d)">${money0(gaP)}</div><div class="pk">Gastado</div></div>
-      <div><div class="pv">${money0(apP-gaP)}</div><div class="pk">Neto</div></div>
+    <div class="hflex">
+      <div><div class="lbl">Saldo disponible</div><div class="big">${money(d.saldo)}</div>
+        <div class="chips"><span class="chip up">↑ Aportado ${money0(d.aportado)}</span><span class="chip dn">↓ Gastado ${money0(d.gastado)}</span></div></div>
+      <div style="text-align:center;flex-shrink:0">${ring(pct)}<div class="lbl" style="font-size:12px;margin-top:-2px">${meta>0?"faltan "+money0(falta):"sin meta"}</div></div>
     </div>
-    <div class="lbl" style="margin-top:12px;text-align:center">${perStr}</div>
+    ${d.lastAp?`<div class="inflow"><span class="iarw">↓</span>Último aporte <b>${agoStr(d.lastAp.fecha)}</b> · ${d.lastAp.quien||"—"} <b>${money0(ABS(d.lastAp))}</b></div>`:""}
   </div>
 
-  <div class="card">
-    <div class="lbl">Quién va aportando <span style="color:var(--tx3)">· ahorro común</span></div>
-    <div class="bar">${pa.map(p=>`<div style="width:${(p.pct*100).toFixed(1)}%;background:${p.c}"></div>`).join("")}</div>
-    <div class="legend">${pa.map(p=>`<span><span class="dot" style="background:${p.c}"></span>${p.k} <span style="color:var(--tx2)">· ${money0(p.v)}</span></span>`).join("")}</div>
-    ${balNote?`<div class="note ${balCls}">${balCls==="ok"?"✓":"!"} ${balNote}</div>`:""}
-  </div>
+  <div class="card"><div class="lbl" style="margin-bottom:6px">Tendencia y proyección</div>${buildTrend(d.series,meta,d.saldo)}</div>
 
   <div class="card"><div class="lbl" style="margin-bottom:12px">Por propósito</div>${propHTML}</div>
 
   <div class="card">
-    <div class="prow" style="margin-bottom:10px"><span class="lbl">Gastos</span><span class="pval" style="color:var(--peach-d)">−${money0(d.gastado)}</span></div>
+    <div class="prow" style="margin-bottom:10px"><span class="lbl">En qué se va</span><span class="pval" style="color:var(--peach-d)">−${money0(d.gastado)}</span></div>
     ${gastosHTML}
   </div>
 
-  <div class="card"><div class="lbl" style="margin-bottom:10px">Crecimiento del ahorro</div>${area(d.series)}</div>
-
-  <details class="card"><summary><span class="lbl">Historial reciente</span><span class="caret">›</span></summary>
-    <div style="margin-top:12px">${recent||'<div class="lbl">Sin movimientos.</div>'}</div>
+  <details class="card" ${state.openQuien?'open':''} ontoggle="state.openQuien=this.open">
+    <summary><span class="lbl">Quién va aportando <span style="color:var(--tx3)">· ahorro común</span></span><span class="sumval">${money0(totComun)}<span class="caret" style="margin-left:6px">›</span></span></summary>
+    <div style="margin-top:12px">
+      <div class="bar">${pa.map(p=>`<div style="width:${(p.pct*100).toFixed(1)}%;background:${p.c}"></div>`).join("")}</div>
+      <div class="legend">${pa.map(p=>`<span><span class="dot" style="background:${p.c}"></span>${p.k} <span style="color:var(--tx2)">· ${money0(p.v)}</span></span>`).join("")}</div>
+      ${balNote?`<div class="note ok">${balNote}</div>`:""}
+    </div>
   </details>
-  <a class="verlink" href="#historial">Ver historial completo  →</a>
 
-  <div class="foot">Actualizado ${new Date().toLocaleString("es-PA",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})} · <a href="#" onclick="load();return false">Actualizar</a></div>`;
+  <details class="card" ${state.openPer?'open':''} ontoggle="state.openPer=this.open">
+    <summary><span class="lbl">Resumen por período</span><span class="caret">›</span></summary>
+    <div style="margin-top:14px">
+      <div class="seg" style="margin-bottom:14px">${segs.map(s=>`<button class="${state.period===s[0]?'active':''}" onclick="setP('${s[0]}')">${s[1]}</button>`).join("")}</div>
+      <div class="pgrid">
+        <div><div class="pv" style="color:var(--mint-d)">${money0(apP)}</div><div class="pk">Aportado</div></div>
+        <div><div class="pv" style="color:var(--peach-d)">${money0(gaP)}</div><div class="pk">Gastado</div></div>
+        <div><div class="pv">${money0(apP-gaP)}</div><div class="pk">Diferencia</div></div>
+      </div>
+      <div class="lbl" style="margin-top:10px;text-align:center">${perStr}</div>
+    </div>
+  </details>
+
+  <details class="card" ${state.openHist?'open':''} ontoggle="state.openHist=this.open">
+    <summary><span class="lbl">Historial reciente</span><span class="caret">›</span></summary>
+    <div style="margin-top:12px">${recent||'<div class="lbl">Sin movimientos.</div>'}</div>
+    <a class="verlink" href="#historial" style="margin-top:12px;margin-bottom:0">Ver historial completo  →</a>
+  </details>
+
+  <div class="foot">Actualizado ${new Date().toLocaleString("es-PA",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})} · <a class="tap" href="#" onclick="load();return false">Actualizar</a></div>`;
 }
 
 /* ---------- HISTORIAL ---------- */
@@ -353,7 +409,7 @@ function historialView(mov){
       <label>Desde<input type="date" value="${state.hf}" onchange="setHF(this.value)"></label>
       <label>Hasta<input type="date" value="${state.ht}" onchange="setHT(this.value)"></label>
     </div>
-    ${filtered?`<a href="#" onclick="clearF();return false" style="display:inline-block;margin-top:12px;font-size:12px;color:var(--lav-d);text-decoration:none">Limpiar filtros</a>`:""}
+    ${filtered?`<a class="tap" href="#" onclick="clearF();return false" style="margin-top:6px;font-size:13px;color:var(--lav-d);text-decoration:none">Limpiar filtros</a>`:""}
   </div>
   <div class="card">
     <div class="sumrow" style="margin-bottom:6px"><span class="lbl">${list.length} movimiento${list.length===1?'':'s'}</span>
@@ -364,7 +420,7 @@ function historialView(mov){
 
 /* ---------- estado + router ---------- */
 let DATA=null;
-const state={period:"todo",hp:"todos",hf:"",ht:""};
+const state={period:"todo",hp:"todos",hf:"",ht:"",openQuien:false,openPer:false,openHist:false};
 function setP(p){state.period=p;render()}
 function setHP(p){state.hp=p;render()}
 function setHF(v){state.hf=v;render()}
@@ -386,7 +442,7 @@ async function load(){
     if(!mov.length){document.getElementById("view").innerHTML='<div class="state">No se encontraron movimientos todavía.</div>';return}
     DATA={mov,cfg};render();
   }catch(e){
-    document.getElementById("view").innerHTML='<div class="state">No se pudo leer la hoja. Revisa que siga publicada en la web.<br><br><button class="btn" onclick="load()">Reintentar</button></div>';
+    document.getElementById("view").innerHTML='<div class="state">No se pudo leer la hoja. Revisen que siga publicada en la web.<br><br><button class="btn" onclick="load()">Reintentar</button></div>';
   }
 }
 window.addEventListener("hashchange",()=>{window.scrollTo(0,0);render()});
